@@ -1,0 +1,41 @@
+import numpy as np
+from scipy.special import gamma
+scores = [92.64,79.00,84.79,97.41,93.68,65.23,84.50,73.49,73.97,79.11]
+
+total = 0
+for i in scores: 
+    total += i 
+mean = total / len(scores)
+
+stdevvalues = 0
+for i in scores: 
+    stdevvalues += (mean-i)**2
+stdev = (stdevvalues*(1/(len(scores)-1)))**(0.5)
+
+def t_distribution_pdf(x, nu):
+    coeff = gamma((nu + 1) / 2) / (np.sqrt(nu * np.pi) * gamma(nu / 2))
+    density = coeff * (1 + x**2 / nu) ** (-0.5 * (nu + 1))
+    return density
+
+def find_t_star(prob, nu, x_start=0, x_end=20, num_points=10000):
+    # Define the x values
+    x = np.linspace(x_start, x_end, num_points)
+    # Apply the density function to the x values
+    y = t_distribution_pdf(x, nu)
+    # This next line is the integration (exercise: why does this work? why not?)
+    cdf = np.cumsum(y) * (x[1] - x[0]) 
+    # Find the t-value where the cumulative probability reaches half of the required probability
+    target_half_prob = prob / 2
+    index = np.where(cdf >= target_half_prob)[0][0]
+    return x[index]
+
+t_star = find_t_star(0.95,len(scores)-1)
+t_0 = ((mean - 75)/(stdev/(len(scores)**0.5)))
+print(t_0, t_star)
+
+def within(t0, star):
+    if abs(t0)>star:
+        return False
+    else:
+        return True 
+print(within(t_0,t_star))
