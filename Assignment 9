@@ -1,0 +1,52 @@
+#a)
+#sympy comes predownloaded - yippee
+import sympy as sp
+#initialize symbols
+x, y = sp.symbols('x y')
+# Define a function
+f = sp.exp(x)*sp.sin(y)+y**3
+# Differentiate f with respect to x
+df_dx = sp.diff(f, x)
+# Differentiate f with respect to y
+df_dy = sp.diff(f, y)
+print (df_dx,",",df_dy)
+
+#b)
+g = (x**2)*y + x*(y**2)
+dg_dx = sp.diff(g, x)
+dg_dy = sp.diff(g, y)
+print (dg_dx,",",dg_dy)
+print (2*1*(-1)+(-1)**2)
+print (1**2 + 2*1*(-1))
+
+#c)
+h = sp.ln(x**2+y**2)
+dh_dx = sp.diff(h, x)
+dh_dy = sp.diff(h, y)
+d2h_dx2 = sp.diff(dh_dx, x)
+d2h_dy2 = sp.diff(dh_dy, y)
+d2h_dxdy = sp.diff(dh_dy, x)
+#this specific function isn't needed... but it helps to further my argument below.
+d2h_dydx = sp.diff(dh_dx, y)
+print (d2h_dx2,",",d2h_dy2,",",d2h_dydx,",",d2h_dxdy)
+#The two mixed partial derivatives are identical. This shows that they are symmetrical. Oftentimes, functions, especially those with somewhat similar or mirrored placements of x and y, will give symmetrical or even equal mixed partial derivatives.
+
+#d), e)
+import numpy as np
+import matplotlib.pyplot as plt
+x, y = sp.symbols('x y')
+j = x**4 - 4*x*y + y**4
+
+j_func = sp.lambdify((x, y), j, 'numpy')
+
+x_vals = np.linspace(-3, 3, 400)
+y_vals = np.linspace(-3, 3, 400)
+X, Y = np.meshgrid(x_vals, y_vals)
+Z = j_func(X, Y)
+
+plt.contourf(X, Y, Z, levels=50, cmap='cividis')
+plt.colorbar()
+plt.title('Contour plot of $j(x, y) = x^4 - 4xy + y^4$')
+plt.xlabel('$x$')
+plt.ylabel('$y$')
+plt.show()
