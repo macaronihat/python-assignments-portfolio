@@ -1,0 +1,41 @@
+import numpy as np
+def f1(x):
+    return (x**2)
+def f2(x):
+    return (np.sin(x))
+def f3(x):
+    return (np.exp(x))
+
+def derivative(f, c): #gets derivative of function
+    dx = 10**(-8)
+    return (f(c+dx) - f(c-dx))/(2*dx)
+
+def linap(f, c, deriv, x): #linear approximation of function at a point a
+    return f(c) + deriv*(x-c)
+
+def findpoint(f, c, deriv, x, E, isx1): #isx1 is a bool
+    maxiter = 1000 # max runs (iterations)
+    for i in range (maxiter):
+        linx = linap (f, c, deriv, x) #finds linear approximation for the x
+        error = abs(f(x) - linx) #find the error at that time
+        if abs(error - E) < 0.00000001: # compares the found error to error i should be getting
+            return x
+        if isx1: x = x - (error - E) / deriv #this means that it's x1 (meaning it should go lower) - step value is based on error and derivative
+        else: x = x + (error - E) / deriv #the opposite
+            
+def actualfunctionthingy (f, c, E):
+    deriv = derivative (f, c)
+    x1 = c - 0.1 #set x1
+    x2 = c + 0.1 #set x2
+    p1 = findpoint (f, c, deriv, x1, E, isx1 = True)
+    p2 = findpoint (f, c, deriv, x2, E, isx1 = False)
+    return p1, p2
+choice = input ("f1, f2, or f3 (as found in the kritik sheet)?\n") #chooses an input to run
+if (choice == "f1" or choice == "1"):
+    print (actualfunctionthingy (f1, 1, 0.1))
+elif (choice == "f2" or choice == "2"):
+    print (actualfunctionthingy (f2, (np.pi)/4, 0.05))
+elif (choice == "f3" or choice == "3"):
+    print (actualfunctionthingy (f3, 0, 0.01))
+else:
+    print ("invalid input")
