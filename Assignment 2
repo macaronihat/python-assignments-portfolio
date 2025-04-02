@@ -1,0 +1,23 @@
+import numpy as npy
+def roots(A,B,C,D=1e-15):
+    if npy.sign(A(B))==npy.sign(A(C)):
+        return None
+    for i in range(1000):
+        mid=(B+C)/2
+        if npy.abs(A(mid))<D:
+            return mid
+        elif npy.sign(A(B))==npy.sign(A(mid)):
+            return roots(A,mid,C,D)
+        else:
+            return roots(A,B,mid,D)
+TestCases=[
+    (lambda x:npy.exp(x)+npy.log(x),0.1,1),
+    (lambda x:npy.arctan(x)-x**2,0,2),
+    (lambda x:npy.sin(x)/npy.log(x),3,4),
+    (lambda x:npy.log(npy.cos(x)),5,7)]
+for i, (A,B,C) in enumerate(TestCases):
+    rts=roots(A,B,C)
+    if rts is not None:
+        print(f"The root of the function within[{B},{C}]={rts:.10f}")
+    else:
+        print(f"No root was found for the function within[{B},{C}]")
